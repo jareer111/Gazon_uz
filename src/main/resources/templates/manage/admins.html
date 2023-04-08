@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="~{fragments::head(~{::title},~{::link})}">
+    <meta charset="UTF-8">
+    <title>Admins</title>
+    <link rel="stylesheet" href="">
+</head>
+<body>
+
+<div th:replace="fragments::header"></div>
+
+<div class="container m-3">
+
+    <a href="/manage/admins/permissions" class="btn btn-light">Permission</a>
+    <a href="/manage/admins/roles" class="btn btn-light">Roles</a>
+
+    <div class="container m-5">
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Username</th>
+                <th scope="col">Roles</th>
+                <th scope="col">More</th>
+                <th scope="col">Profile</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="admin, index :${admins}">
+                <th th:text="${index.count}"></th>
+                <td th:text="${admin.getUsername()}"></td>
+                <td th:text="${admin.getRolesAsString()}"></td>
+                <td><a th:href="@{/manage/admins/{id}(id=${admin.getId()})}" th:text="more"></a></td>
+                <td><a th:href="@{/auth/profile/{id}(id=${admin.getId()})}" th:text="${admin.getUsername()}"></a></td>
+
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+
+</div>
+
+
+</body>
+</html>

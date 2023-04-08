@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choose My Location</title>
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css" integrity="sha512-AeX2n/4L4jznyZcvRgPmTpWyjMn/cwv3FYy10Wh5pFh8WtH5v5Qg0xRdp+DPhkKrkAlKv1qy3qfWh5p8KtW5Ag==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Google Maps API JavaScript -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+  <!-- Custom CSS -->
+  <style type="text/css">
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Choose My Location</h1>
+  <p>Please input your location in the field below and click "Find My Location".</p>
+  <div class="mb-3">
+    <label for="locationInput" class="form-label">Location</label>
+    <input type="text" class="form-control" id="locationInput" placeholder="Enter your location">
+  </div>
+  <button class="btn btn-primary" onclick="findMyLocation()">Find My Location</button>
+  <div id="map"></div>
+</div>
+
+<!-- Bootstrap 5 JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.min.js" integrity="sha512-1KZ+7sX+jghbJzKjQDfrx62y7VUZwEdUg7VjKRo6TJi7sXzFh0j0D2PSRRbiu6lNIn6/f+zU6tlKjNpNJNNxnA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- Custom JavaScript -->
+<script type="text/javascript">
+  var map;
+
+  function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: { lat: -34.397, lng: 150.644 },
+      zoom: 8,
+    });
+  }
+
+  function findMyLocation() {
+    var geocoder = new google.maps.Geocoder();
+    var address = document.getElementById("locationInput").value;
+    geocoder.geocode({ address: address }, function (results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        var latlng = results[0].geometry.location;
+        map.setCenter(latlng);
+        var marker = new google.maps.Marker({
+          position: latlng,
+          map: map,
+          title: "Your Location",
+        });
+      } else {
+        alert("Geocode was not successful for the following reason: " + status);
+      }
+    });
+  }
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWdoFIoCvmaZM2ZUyZYHlCp0C6Tx7O_40&callback=initMap"></script>
+</body>
+</html>

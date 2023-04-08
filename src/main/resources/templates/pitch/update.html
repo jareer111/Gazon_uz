@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>UPDATE Pitch</title>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/pitch/create.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" id="bootstrap-css">
+
+</head>
+<body>
+<!------ Include the above in your HEAD tag ---------->
+
+<form class="form-horizontal" method="post" th:object="${pitch}" enctype="multipart/form-data">
+    <h3 style="text-align: center">UPDATE PITCH</h3>
+    <fieldset>
+        <!-- Form Name -->
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="pitch_name">PITCH NAME</label>
+            <div class="col-md-4">
+                <input type="text" id="pitch_name" name="name" th:field="*{name}" placeholder="UPDATE PITCH NAME"
+                       class="form-control input-md" required> <br>
+                <span th:if="${#fields.hasErrors('name')}">
+                      <li th:each="er : ${#fields.errors('name')}" th:text="${#messages.msg(er,'8', '100')}"
+                          class="text-bg-danger"></li>
+                  </span>
+            </div>
+        </div>
+
+
+        <!-- Text input-->
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="description">Description</label>
+            <div class="col-md-4">
+            <textarea class="form-control" rows="3" id="description" name="info" th:field="*{info}"
+                      placeholder="Write the description of the pitch here"></textarea>
+            </div>
+            <div class="invalid-feedback">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="pitch-price">Price(sum)</label>
+            <div class="col-md-4">
+                <input id="pitch-price" name="price" th:field="*{price}" placeholder="115000"
+                       class="form-control input-md" required type="number">
+                <span th:if="${#fields.hasErrors('price')}">
+                      <li th:each="er : ${#fields.errors('price')}" th:text="${#messages.msg(er)}"
+                          class="text-bg-danger"></li>
+                  </span>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="phone-number">Phone Number</label>
+            <div class="col-md-4">
+                <input id="phone-number" name="phoneNumber" th:field="*{phoneNumber}" placeholder="991212233"
+                       pattern="[0-9]{9}" class="form-control input-md" required type="number">
+                <span th:if="${#fields.hasErrors('phoneNumber')}">
+                      <li th:each="er : ${#fields.errors('phoneNumber')}" th:text="${#messages.msg(er)}"
+                          class="text-bg-danger"></li>
+                  </span>
+            </div>
+        </div>
+
+        <!------------------------>
+
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="region">Region:</label>
+            <div class="col-md-4">
+                <select id="region" name="region" onchange="loadDistricts()" th:value="regions" required>
+                    <option value="">Select Region</option>
+                    <option th:each="region : ${regions}" th:value="${region.id}" th:text="${region.name}"></option>
+                </select>
+            </div>
+        </div>
+
+        <!--    end choose region-->
+        <!--    start choose district-->
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="district">District:</label>
+            <div class="col-md-4">
+                <select id="district" name="district" disabled required th:value="districts">
+                    <option value="">Select District</option>
+                    <option th:each="district : ${districts}" th:value="${district.id}"> th:text="${district.name}">
+                    </option>
+                </select>
+            </div>
+        </div>
+        <input id="inputDistrict" name="districtId" type="hidden">
+
+        <!--    end choose district-->
+
+
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="address">Pitch full adress</label>
+            <div class="col-md-6">
+                <div class="col-md-1">
+                    <button type="button" id="btn btn-success buttonlocation" class="col-md-14" onclick="mine()">
+                        <img src="https://as2.ftcdn.net/v2/jpg/03/62/27/87/1000_F_362278723_HJ5W410Byae0ruwfdIuThUNQ4GyvlTWs.jpg"
+                             width="50px 60px">
+                    </button>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" id="address" class="col-md-8" name="fullAddress" th:field="*{fullAddress}">
+                    <input type="hidden" id="latitude" name="latitude" style="margin-top: 10px">
+                    <input type="hidden" id="longitude" name="longitude" style="margin-top: 10px">
+                </div>
+            </div>
+        </div>
+        <br>
+        <!-- File Button -->
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="file_picture_button">PITCH_IMAGE</label>
+            <div class="col-md-4">
+                <input id="file_picture_button" required type="file" multiple="multiple" name="documents"/>
+                <!--                       th:value="*{documents.size()}" th:field="*{documents.size()}" />-->
+            </div>
+        </div>
+        <!-- Button -->
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="singleButton">BUTTONS</label>
+            <div class="col-md-4">
+                <button id="singleButton" type="submit" name="singleButton" class="btn btn-success">UPDATE PITCH</button>
+                || <a href="/user/home" class="btn btn-danger">Back</a>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="/js/pitch/dropdown.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/location_choose.js"></script>
+<script th:inline="javascript">
+    function loadDistricts() {
+        var regionId = document.getElementById("region").value;
+        var districtSelect = document.getElementById("district");
+        districtSelect.disabled = true;
+        districtSelect.innerHTML = "<option value=''>Loading...</option>";
+        if (regionId === "") {
+            districtSelect.innerHTML = "<option value=''>Select District</option>";
+            return;
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                let districts = JSON.parse(xhr.responseText);
+                districtSelect.innerHTML = "<option value=''>Select District</option>";
+                for (let i = 0; i < districts.length; i++) {
+                    let district = districts[i];
+                    let option = document.createElement("option");
+                    option.value = district.id;
+                    option.text = district.name;
+                    districtSelect.appendChild(option);
+                }
+
+                districtSelect.disabled = false;
+            }
+        };
+        xhr.open("GET", "/pitch/districts/" + encodeURIComponent(regionId), true);
+        xhr.send();
+    }
+</script>
+<script>
+    document.getElementById("district")
+        .addEventListener("change", ev => {
+            document.getElementById("inputDistrict").value = ev.target.value;
+        })
+</script>
+
+
+</body>
+</html>

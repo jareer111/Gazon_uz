@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(~{::title},~{::link})}">
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body style="background-color: #0dcaf0">
+<!--<body style="background-image: url('/img/home-page.jpg') !important;">-->
+
+<div th:insert="fragments ::header"></div>
+<!-- <div>
+    <input id="address" type="textbox" value="Sydney, NSW">
+    <input type="button" value="Encode" onclick="codeAddress()">
+  </div> -->
+
+<div style="display: flex; margin-top: 20px">
+    <form class="col-md-1" method="get" action="/pitch/searched" style="margin-left: 20%">
+        <div class="card text-center mb-2" style="width: 25rem;height: 28rem">
+
+            <div style="margin-top: 20px">
+                <h6>FIND PITCHES AROUND YOU</h6>
+                <button type="button" id="btn btn-success buttonlocation" onclick="mine()">Your Location</button>
+            </div>
+            <input type="text" id="address" name="address" style="margin-top: 10px">
+            <input type="hidden" id="latitude" name="latitude" style="margin-top: 10px">
+            <input type="hidden" id="longitude" name="longitude" style="margin-top: 10px">
+            <button type="submit" style="margin-top: 10px">Find Pitch</button>
+        </div>
+    </form>
+
+
+    <form class="col-md-1 " style="margin-left: 20%" method="get" action="/home/getPitchWithDistrict">
+        <div class="card text-center mb-2" style="width: 25rem;height: 27rem">
+            <div class="card-body">
+                <h5 class="card-title">FIND YOUR PLAY</h5>
+                <a>Find Football Pitches in the Uzbekistan</a>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="region">Region:</label>
+                    <div class="col-md-4">
+                        <select id="region" onchange="loadDistricts()" required>
+                            <option value="">Select Region</option>
+                            <option th:each="region : ${regions}" th:value="${region.id}"
+                                    th:text="${region.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <!--    end choose region-->
+
+                <!--    start choose district-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="district">District:</label>
+                    <div class="col-md-4">
+                        <select id="district" disabled required>
+                            <option value="">Select District</option>
+                            <option th:each="district : ${districts}" th:value="${district.id}"
+                                    th:text="${district.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <input id="inputDistrict" name="districtId" type="hidden">
+                <button type="submit" style="margin-top: 10px">Find Pitch</button>
+            </div>
+        </div>
+    </form>
+
+
+    <div th:replace="fragments::js_links">
+
+    </div>
+</div>
+<script th:inline="javascript">
+    function loadDistricts() {
+        var regionId = document.getElementById("region").value;
+        var districtSelect = document.getElementById("district");
+        districtSelect.disabled = true;
+        districtSelect.innerHTML = "<option value=''>Loading...</option>";
+        if (regionId === "") {
+            districtSelect.innerHTML = "<option value=''>Select District</option>";
+            return;
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                let districts = JSON.parse(xhr.responseText);
+                districtSelect.innerHTML = "<option value=''>Select District</option>";
+                for (let i = 0; i < districts.length; i++) {
+                    let district = districts[i];
+                    let option = document.createElement("option");
+                    option.value = district.id;
+                    option.text = district.name;
+                    districtSelect.appendChild(option);
+                }
+
+                districtSelect.disabled = false;
+            }
+        };
+        xhr.open("GET", "/pitch/districts/" + encodeURIComponent(regionId), true);
+        xhr.send();
+    }
+
+    document.getElementById("district")
+        .addEventListener("change", ev => {
+            document.getElementById("inputDistrict").value = ev.target.value;
+        })
+</script>
+
+
+<!--------------------------------End -------------------------->
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+
+<script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAandusjfdlwecXwtMD9RdIlNmC1mrQJaQ&callback=initMap">
+</script>
+
+<script>    function mine() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var elem1 = document.getElementById("latitude");
+            var elem2 = document.getElementById("longitude");
+            elem1.value = position.coords.latitude;
+            elem2.value = position.coords.longitude;
+            console.log(elem1.value);
+            console.log(elem2.value);
+            $.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + position.coords.latitude + ',' + position.coords.longitude + '&key=AIzaSyAandusjfdlwecXwtMD9RdIlNmC1mrQJaQ', function (data) {
+                var elem = document.getElementById("address");
+                console.log(data);
+                elem.value = data.results[0].formatted_address;
+            });
+        });
+    } else 'No position found';
+}
+</script>
+
+
+</body>
+</html>

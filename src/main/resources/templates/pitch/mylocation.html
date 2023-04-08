@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Choose My Location Button</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" integrity="sha512-qyISJbBBv+uMnBtJ30sZLchppDRs/Z2nGG+QLqdxY/EyJh52rKvPmdAwTc8+KZdsw97gIvf95h1f0mJHtajD2Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+<div class="container my-5">
+  <button class="btn btn-primary" onclick="getLocation()">Choose my location</button>
+</div>
+
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js" integrity="sha512-Pp7gjKz+8H7IbZiQw5V5F5SwK8GcQUfRGmYpEJlrdj+I8MsV7ZaE4w4g/4xRvCh8O7yF/gNzS6i+WU6vqU6jWA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js" integrity="sha512-SJnIlX2jzB+4IqFjzIJL0gM4fzlNgPkG3qWJkrjZ+Ynnuf/tLhRcJ/r2ESFwolbKjEzIRJ20cKeC6fjK6Ky18Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- JavaScript -->
+<script>
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  }
+
+  function showPosition(position) {
+    alert("Latitude: " + position.coords.latitude + ", Longitude: " + position.coords.longitude);
+  }
+</script>
+</body>
+</html>

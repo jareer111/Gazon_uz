@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="~{fragments :: head(~{::title},~{::link})}">
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <link rel="stylesheet" href="">
+
+
+</head>
+
+<body>
+
+<div th:insert="fragments::header"></div>
+
+<div class="text-info m-4">
+    <h1>Pitches Information Management</h1>
+</div>
+
+<div class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <form class="d-flex" role="search" action="/manage/pitches">
+
+                <div class="m-2" th:each="status : ${statuses}" style="display: block">
+                    <label th:if="${ status.equals(searchedStatus)}">
+                        <input type="radio" th:value="${status}" th:name="status" checked/>
+                        <span th:text="${status}"/>
+                    </label>
+
+                    <label th:if="${not status.equals(searchedStatus)}">
+                        <input type="radio" th:value="${status}" th:name="status"/>
+                        <span th:text="${status}"/>
+                    </label>
+                </div>
+
+                <input class="form-control me-2" type="search" placeholder="username" aria-label="Search"
+                       name="search"
+                       th:value="${search}">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+
+        </div>
+    </nav>
+</div>
+
+
+<div class="container m-5">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">id</th>
+            <th scope="col">info</th>
+            <th scope="col">address</th>
+            <th scope="col">name</th>
+            <th scope="col">likes</th>
+            <th scope="col">dislikes</th>
+            <th scope="col">price</th>
+            <th scope="col">rating</th>
+            <th scope="col">owner</th>
+            <th scope="col">more</th>
+            <th scope="col">status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="pitch, index : ${objects}">
+            <td th:text="${index.count}"></td>
+            <td th:text="${pitch.getId()}"></td>
+            <td th:text="${pitch.getInfo()}"></td>
+            <td th:text="${pitch.getFullAddress()}"></td>
+            <td th:text="${pitch.getName()}"></td>
+            <td th:text="${pitch.getLikes()}"></td>
+            <td th:text="${pitch.getDislikes()}"></td>
+            <td th:text="${pitch.getPrice()}"></td>
+            <td th:text="${pitch.getRating()}"></td>
+            <td><a class="link-info" th:href="@{/auth/profile/{id}(id=${pitch.getUser().getId()})}"
+                   th:text="${pitch.getUser().getUsername()}"></a></td>
+            <td><a class="link-info" th:href="@{/pitchInfo/show/{id}(id=${pitch.getId()})}">info</a></td>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle"
+                            type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            th:text="${pitch.getStatus()}">
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item"
+                               th:each="status:${statuses}"
+                               th:if=" ${not status.equals(pitch.getStatus())}"
+                               th:href="@{/manage/editpitch/status
+                               (id=${pitch.id},status=${status},page=${currentPage},perPage=${perPage},search=${search})}"
+                               th:text=" ${status}">
+                        </a></li>
+                    </ul>
+                </div>
+
+                <!--                <div class="dropdown">-->
+                <!--                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"-->
+                <!--                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"-->
+                <!--                            th:text="${user.getStatus()}">-->
+                <!--                    </button>-->
+                <!--                    <ul class="dropdown-menu">-->
+                <!--                        <li>-->
+                <!--                            &lt;!&ndash;                            <a class="dropdown-item" th:each="status : ${statuses}"&ndash;&gt;-->
+                <!--                            &lt;!&ndash;                               th:href="@{/manage/edituser/status?id=${user.id}&status=${status}&page=${currentPage}&perPage=${perPage}}"&ndash;&gt;-->
+                <!--                            &lt;!&ndash;                               th:if="${status!=user.getStatus()}"&ndash;&gt;-->
+                <!--                            &lt;!&ndash;                               th:text="${status}">&ndash;&gt;-->
+                <!--                            &lt;!&ndash;                            </a>&ndash;&gt;-->
+                <!--                        </li>-->
+                <!--                    </ul>-->
+                <!--                </div>-->
+            </td>
+
+        </tr>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item" th:if="${currentPage>0}">
+                    <a class="page-link"
+                       th:href="@{/manage/pitches(page=${currentPage - 1},perPage=${perPage},search=${search})}">Previous
+                    </a>
+                </li>
+                <li class="page-item" th:each="index: ${#numbers.sequence(0,totalFound/perPage,perPage)}">
+                    <a class="page-link" th:classappend="${currentPage==index  ?'active':''}"
+                       th:href="@{/manage/pitches(page=${index },perPage=${perPage},search=${search})}">[[${index+1}]]
+                    </a>
+                </li>
+                <li class="page-item" th:if="${currentPage<totalPage}">
+                    <a class="page-link"
+                       th:href="@{/manage/pitches(page=${currentPage + 1},perPage=${perPage},search=${search}) }">Next
+                    </a>
+                </li>
+
+
+            </ul>
+        </nav>
+
+
+        </tbody>
+    </table>
+
+</div>
+
+<section th:insert="fragments::js_links">
+</section>
+
+<!--<section>-->
+<!--    <script src="/js/popper.min.js"></script>-->
+<!--</section>-->
+
+</body>
+</html>

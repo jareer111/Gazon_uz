@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="~{fragments :: head(~{::title},~{::link})}">
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <link rel="stylesheet" href="">
+</head>
+<body>
+
+<div th:insert="fragments::header"></div>
+
+
+<div class="text-info m-4">
+    <h1> Users Information Management</h1>
+</div>
+
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        <form class="d-flex" role="search" action="/manage/users">
+            <input class="form-control me-2" type="search" placeholder="username" aria-label="Search" name="search"
+                   id="searchInput" onchange="saveSearchInputElement(this.value)" onload="setValueToSearchInput()">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+
+
+<div class="container m-5">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">id</th>
+            <th scope="col">username</th>
+            <th scope="col">email</th>
+            <th scope="col">language</th>
+            <th scope="col">phone number</th>
+            <th scope="col">status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user, index : ${objects}">
+            <td th:text="${index.count}"></td>
+            <td th:text="${user.getId()}"></td>
+            <td th:text="${user.getUsername()}"></td>
+            <td th:text="${user.getEmail()}"></td>
+            <td th:text="${user.getLanguage()}"></td>
+            <!--            <td th:text="#{phonenumbernumber.number.not.provided}"></td>--></a>
+            <td th:text="${user.getLanguage()==null}?#{phone.number.not.provided}:${user.getPhoneNumber()}"></td>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle"
+                            type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            th:text="${user.getStatus()}">
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item"
+                               th:each="status:${statuses}"
+                               th:if=" ${not status.equals(user.getStatus())}"
+                               th:href="@{/manage/edituser/status
+                               (id=${user.id},status=${status},page=${currentPage},perPage=${perPage},search=${search})}"
+                               th:text=" ${status}">
+                        </a></li>
+                    </ul>
+                </div>
+
+                <!--                <div class="dropdown">-->
+                <!--                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"-->
+                <!--                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"-->
+                <!--                            th:text="${user.getStatus()}">-->
+                <!--                    </button>-->
+                <!--                    <ul class="dropdown-menu">-->
+                <!--                        <li>-->
+                <!--                            &lt;!&ndash;                            <a class="dropdown-item" th:each="status : ${statuses}"&ndash;&gt;-->
+                <!--                            &lt;!&ndash;                               th:href="@{/manage/edituser/status?id=${user.id}&status=${status}&page=${currentPage}&perPage=${perPage}}"&ndash;&gt;-->
+                <!--                            &lt;!&ndash;                               th:if="${status!=user.getStatus()}"&ndash;&gt;-->
+                <!--                            &lt;!&ndash;                               th:text="${status}">&ndash;&gt;-->
+                <!--                            &lt;!&ndash;                            </a>&ndash;&gt;-->
+                <!--                        </li>-->
+                <!--                    </ul>-->
+                <!--                </div>-->
+            </td>
+
+        </tr>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item" th:if="${currentPage>0}">
+                    <a class="page-link"
+                       th:href="@{/manage/users(page=${currentPage - 1},perPage=${perPage},search=${search})}">Previous
+                    </a>
+                </li>
+                <li class="page-item" th:each="index: ${#numbers.sequence(0,totalFound/perPage,perPage)}">
+                    <a class="page-link" th:classappend="${currentPage==index  ?'active':''}"
+                       th:href="@{/manage/users(page=${index },perPage=${perPage},search=${search})}">[[${index+1}]]
+                    </a>
+                </li>
+                <li class="page-item" th:if="${currentPage<totalPage}">
+                    <a class="page-link"
+                       th:href="@{/manage/users(page=${currentPage + 1},perPage=${perPage},search=${search}) }">Next
+                    </a>
+                </li>
+
+
+            </ul>
+        </nav>
+
+
+        </tbody>
+    </table>
+
+</div>
+
+<section th:insert="fragments::js_links">
+</section>
+
+<script>
+    // Session storage'da "myKey" nomli kalitni "myValue" qiymati bilan saqlash
+    function setItem(k, v) {
+        sessionStorage.setItem(k, v);
+        // Session storage dan "myKey" nomli kalitni o'qish
+        var myValue = sessionStorage.getItem(k);
+        console.log(myValue); // "myValue"
+    }
+
+    function getItem(k) {
+        // Session storage dan "myKey" nomli kalitni o'qish
+        return sessionStorage.getItem(k);
+    }
+
+    const myValue = getItem('cookie');
+
+    // Inputning value atributiga session storage dan olingan ma'lumotni joylash
+    document.getElementById("myInput").value = myValue;
+
+
+    const searchInputElement = document.getElementById("searchInput");
+    searchInputElement.value = sessionStorage.getItem("searchInput") + 'jack'
+    console.log(searchInputElement.value)
+
+    function saveSearchInputElement(value) {
+        sessionStorage.setItem('searchInput', value)
+        alert(sessionStorage.getItem('searchInput'))
+    }
+
+    function setValueToSearchInput() {
+        const elementById = document.getElementById('searchInput');
+        elementById.value=sessionStorage.getItem('searchInput')
+        alert(sessionStorage.getItem('searchInput'))
+    }
+
+
+</script>
+
+<!--<section>-->
+<!--    <script src="/js/popper.min.js"></script>-->
+<!--</section>-->
+
+</body>
+</html>

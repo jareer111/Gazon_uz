@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="~{fragments :: head(~{::title},~{::link})}">
+    <meta charset="UTF-8">
+    <title>My Pitch</title>
+    <link rel="stylesheet" href="">
+    <!--    <link rel="stylesheet" href="https://fontawesome.com/releases/v5.15/css/all.css"/>-->
+</head>
+<body>
+
+
+<div th:replace="fragments::header"></div>
+
+
+<div class="container">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Full Address</th>
+            <th scope="col">Likes</th>
+            <th scope="col">Dis Likes</th>
+            <th>Status</th>
+            <th scope="col">More</th>
+            <th>Action</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="pitch, index : ${pitches}" th:with="pitchModalId=${pitch.getId() + '-modal'}">
+
+            <th scope="row" th:text="${index.count}"></th>
+            <td th:text="${pitch.getName()}"></td>
+            <td th:text="${pitch.getFullAddress()}"></td>
+            <td th:text="${pitch.getLikes()}"></td>
+            <td th:text="${pitch.getDislikes()}"></td>
+            <td th:text="${pitch.getStatus()}"></td>
+            <td><a th:href="@{/pitchInfo/{id}(id=${pitch.getId()})}" class="link-info">info</a>
+            </td>
+            <td>
+                <a class="btn btn-warning" th:href="@{pitches/update}">Update</a>
+                <a class="btn btn-danger" th:href="@{pitches/delete}">Delete</a>
+                <!-- Button trigger modal -->
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal"
+                        th:attr="dataModal=${pitch.id}"
+                        data-target="#myModal" onclick="putValue(this.getAttribute('dataModal'))">
+                    Requests
+                </button>
+            </td>
+
+
+            <script>
+
+            </script>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Recent Requests</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="myModalBody">
+
+                <!--                <ul>-->
+                <!--                    <li>-->
+                <!--                        by <span class="text-decoration-underline italic">jack</span> for <span class="italic">Mar 24 23:00</span>-->
+                <!--                        <a href="/user/mypitch/reject">Accept</a>-->
+                <!--                        <a href="/user/mypitch/reject">Reject</a>-->
+                <!--                    </li>-->
+                <!--                </ul>-->
+
+            </div>
+        </div>
+    </div>
+
+
+    <div th:replace="fragments::js_links"></div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+
+</div>
+
+
+<script>
+    let pitchId;
+    let pitches;
+
+    async function putValue(id) {
+
+
+        this.pitchId = id;
+        console.log('pitch id= ' + id)
+        const response = await fetch(`http://localhost:8080/user/orders/${id}`);
+        this.pitches = await response.json();
+        console.log(this.pitches)
+
+
+        // <div class="modal-body" id="myModalBody">
+        //
+        //     <ul>
+        //         <li>
+        //             by <span class="text-decoration-uclassNameine italic">jack</span> for <span class="italic">Mar 24 23classNamespan>
+        //                 <a href="/user/mypitch/reject">Accept</a>
+        //                 <a href="/user/mypitch/reject">Reject</a>
+        //         </li>
+        //     </ul>
+        //
+        // </div>
+
+
+        const myModal = document.getElementById('myModalBody');
+
+        const ul = document.createElement('ul');
+        ul.class = "ul";
+        const innerUl = document.createElement('ul');
+        innerUl.class = "ul";
+        ul.appendChild(innerUl)
+
+
+        if(this.pitches.length>0) {
+            this.pitches.forEach(pitch => {
+                const li = document.createElement('li');
+
+                li.innerHTML = `by <span class="text-decoration-underline italic"><a class="link-info" href="/auth/profile/${pitch.user_id}">${pitch.username}</a></span> for <span class="text fs-5">${new Date(pitch.start_time).toLocaleString()}, ${pitch.minutes} minutes</span>
+                            <div class="container m-2">
+                            <a class="btn btn-danger" href="/user/mypitch/reject/${pitch.id}"><!--<i class="fa fa-times" aria-hidden="true"></i>--> Reject</a>
+                            <a class="btn btn-success" href="/user/mypitch/accept/${pitch.id}"><!--<i class="fa fa-check" aria-hidden="true"></i>-->  Accept</a>
+                            </div>
+`
+
+                ul.appendChild(li);
+            })
+            myModal.innerHTML = ul.innerHTML
+        }else{
+            myModal.innerHTML='<p class="text m-1">No requests found yet.</p>';
+            // alert('no requests found')
+        }
+
+
+
+    }
+
+
+    function formatISODate(dateString) {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const day = date.getDate().toString().padStart(2, "0");
+        const hours = date.getHours().toString().padStart(2, "0");
+        const minutes = date.getMinutes().toString().padStart(2, "0");
+        const seconds = date.getSeconds().toString().padStart(2, "0");
+        const milliseconds = date.getMilliseconds().toString().padStart(3, "0");
+
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+    }
+
+
+</script>
+</body>
+</html>

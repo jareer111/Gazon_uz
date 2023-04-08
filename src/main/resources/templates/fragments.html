@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:fragment="head(title,links)">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <meta charset="UTF-8">
+    <th:block th:replace="${title}"></th:block>
+    <th:block th:replace="${links}"></th:block>
+
+</head>
+
+<body>
+
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary" th:fragment="header">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Pitches</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/pitch/create">Create Pitch</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('PITCH_OWNER')">
+                    <a class="nav-link" href="/mypitches">Pitch Board</a>
+                </li>
+
+                <li class="nav-item dropdown" th:if="${#authentication.isAuthenticated() }"
+                    sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">Manage
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/manage/users}">Users</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/manage/pitches}">Pitches</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/manage/admins}">Admins</a>
+                        </li>
+                        <!--                        <li class="nav-item">-->
+                        <!--                            <a class="nav-link" th:href="@{/auth/logout}" sec:authorize="isAuthenticated()">Logout</a>-->
+                        <!--                        </li>-->
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown ms-auto">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false"> <i class="fi fi-sr-user"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/auth/login}" sec:authorize="isAnonymous()">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               th:href="@{/auth/profile/{id}(id=${#authentication.getPrincipal().getAuthUser().getId()})}"
+                               sec:authorize="isAuthenticated()">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/auth/register}" sec:authorize="isAnonymous()">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/auth/logout}" sec:authorize="isAuthenticated()">Logout</a>
+                        </li>
+                    </ul>
+                </li>
+
+
+                <!--                <ul class="navbar-nav mb-2 mb-lg-0">-->
+                <!--                    <li class="nav-item">-->
+                <!--                        <a class="nav-link" th:href="@{/auth/login}" sec:authorize="isAnonymous()">Login</a>-->
+                <!--                    </li>-->
+                <!--                    <li class="nav-item">-->
+                <!--                        <a class="nav-link" th:href="@{/auth/register}" sec:authorize="isAnonymous()">Register</a>-->
+                <!--                    </li>-->
+                <!--                    <li class="nav-item">-->
+                <!--                        <a class="nav-link" th:href="@{/auth/logout}" sec:authorize="isAuthenticated()">Logout</a>-->
+                <!--                    </li>-->
+                <!--                </ul>-->
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<section th:fragment="js_links">
+    <script src="/js/bootstrap.min.js"></script>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="~{fragments::head(~{::title},~{::link})}">
+    <meta charset="UTF-8">
+    <title>Permissions</title>
+    <link rel="stylesheet" href="">
+</head>
+<body>
+
+<div th:replace="fragments::header"></div>
+
+<div class="container m-5">
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addPermission">
+        Add
+    </button>
+
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Code</th>
+            <th scope="col">Action</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="perm, index :${permissions}">
+            <th th:text="${index.count}"></th>
+            <td th:text="${perm.getName()}"></td>
+            <td th:text="${perm.getCode()}"></td>
+            <td>
+                <a class="btn btn-danger" th:href="@{/manage/admins/permissions/delete/{id}(id=${perm.getId()})}" th:text="Delete"></a>
+                ||
+                <a   class="btn btn-warning" th:href="@{/manage/admins/{id}(id=${perm.getId()})}" th:text="Update"></a>
+
+
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="addPermission" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Permission</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="/manage/admins/permissions/add">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Permission Name</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                               placeholder="Give a name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Give Code</label>
+                        <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Code"
+                               name="code">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+
+</body>
+</html>

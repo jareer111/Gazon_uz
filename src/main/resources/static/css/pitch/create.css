@@ -1,0 +1,88 @@
+.form-horizontal {
+    height: 100%;
+    background-color: #d8a051;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARwAAACxCAMAAAAh3/JWAAAAA1BMVEUbqPBsarW2AAAASElEQVR4nO3BMQEAAADCoPVPbQ0PoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIALA8UNAAFusnLHAAAAAElFTkSuQmCC");
+
+    background-size: 100% 100%;
+    width: 100%;
+}
+
+.form-control {
+    height: 45px;
+}
+
+
+.form-horizontal fieldset {
+    horiz-align: center;
+    margin-top: 10px;
+    font-size: large;
+    line-height: 3;
+}
+
+.main_header {
+    margin-top: 0px;
+}
+
+.main_header h1 {
+    text-align: center;
+    color: white;
+    background-color: #29395f;
+}
+
+.form-group {
+
+}
+
+.add_back {
+}
+
+
+/*dropdovn */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+nav {
+    background: yellow;
+}
+
+/* ============ desktop view ============ */
+@media all and (min-width: 992px) {
+    .dropdown-menu li {
+        position: relative;
+    }
+
+    .dropdown-menu .submenu {
+        display: none;
+        position: absolute;
+        left: 100%;
+        top: -7px;
+    }
+
+    .dropdown-menu .submenu-left {
+        right: 100%;
+        left: auto;
+    }
+
+    .dropdown-menu > li:hover {
+        background-color: #f1f1f1
+    }
+
+    .dropdown-menu > li:hover > .submenu {
+        display: block;
+    }
+}
+
+/* ============ desktop view .end// ============ */
+/* ============ small devices ============ */
+@media (max-width: 991px) {
+    .dropdown-menu .dropdown-menu {
+        margin-left: 0.7rem;
+        margin-right: 0.7rem;
+        margin-bottom: .5rem;
+    }
+}
+
+/* ============ small devices .end// ============ */

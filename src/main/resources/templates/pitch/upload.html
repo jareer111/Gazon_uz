@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--
+<form method="post" enctype="multipart/form-data">
+    <div>
+        <label for="file" class="form-label">Large file input example</label>
+        <input type="file" class="form-control" name="file" id="file">
+    </div>
+
+<div class="mb-3">
+    <button type="submit" class="btn btn-success">Save</button>
+</div>
+</form>-->
+
+<form th:action="@{/file/upload}" method="post" enctype="multipart/form-data">
+    <!--<input type="hidden" name="_csrf" th:value="${_csrf.getToken()}">-->
+    <label>
+        <input type="text" name="fname">
+    </label>
+    <label>
+        <input type="text" name="lname">
+    </label>
+    <input type="file" name="file[]" multiple="multiple"/>
+    <input type="submit" value="upload">
+</form>
+
+</body>
+</html>

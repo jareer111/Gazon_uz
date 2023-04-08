@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(~{::title},~{::link})}">
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <link rel="stylesheet" href="">
+</head>
+<body>
+<div th:replace="fragments::header"></div>
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        <form class="d-flex" role="search" action="/manage/users">
+            <input class="form-control me-2" type="search" placeholder="username" aria-label="Search" name="search"
+                   th:value="${search}">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+<div class="container" style="display:flex;flex-direction: column;align-items: center;">
+<div class="row" th:each="pitch:${pitches}">
+    <div class="col-sm-6 mb-3 mb-sm-0">
+        <div class="card" style="width: 18rem; margin-top: 20px;">
+            <img th:src="@{/img/{path}(path=${pitch.getDocuments().iterator().next().getGeneratedFileName()})}">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${pitch.getName()}"></h5>
+                <p class="card-text" th:text="${pitch.getInfo()}"></p>
+                <p class="card-text" th:text="${pitch.getFullAddress()}"></p>
+                <a th:href="@{/pitchInfo/show/{id}(id=${pitch.getId()})}" class="btn btn-primary">See Pitch</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+
+<section th:insert="fragments::js_links">
+</section>
+
+<!--<section>-->
+<!--    <script src="/js/popper.min.js"></script>-->
+<!--</section>-->
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(~{::title},~{::link})}">
+    <meta charset="UTF-8">
+    <title>User Orders</title>
+    <link rel="stylesheet" href="">
+</head>
+<body>
+<table class="table">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">OrderID</th>
+        <th scope="col">Pitch Name</th>
+        <th scope="col">Pitch Address</th>
+        <th scope="col">Order Status</th>
+        <th scope="col">Start Time</th>
+        <th scope="col">Finish Time</th>
+        <th scope="col">Sent Time</th>
+        <th scope="col">Accepted Time</th>
+    </tr>
+    </thead>
+    <tbody th:each="order,count :${orders}">
+    <tr>
+        <td th:value="${count.index}"></td>
+        <td th:value="${order.getId()}"></td>
+        <td th:value="${order.getPitch().getName()}"></td>
+        <td th:value="${order.getPitch().getFullAddress()}"></td>
+        <td th:value="${order.getOrderStatus().name()}"></td>
+        <td th:value="${order.getStartTime()}"></td>
+        <td th:value="${order.getStartTime().plusMinutes(order.getMinutes())}"></td>
+        <td th:value="${order.getCreatedAt()}"></td>
+        <td th:value="${order.getAcceptedAt()}? order.getAcceptedAt() : 'Not Accepted Yet'"></td>
+    </tr>
+
+    <section th:insert="fragments::js_links">
+    </section>
+
+    </tbody>
+</table>
+</body>
+</html>
